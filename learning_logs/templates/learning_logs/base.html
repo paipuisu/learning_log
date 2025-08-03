@@ -1,11 +1,15 @@
+{% load static %}
+<script src="{% static 'js/logout.js' %}"></script>
+
 <p>
   <a href="{% url 'learning_logs:index' %}">学習ノート</a> -
   <a href="{% url 'learning_logs:topics' %}">トピック一覧</a> -
   {% if user.is_authenticated %}
     こんにちは {{ user.username }}さん
-    <form action="{% url 'users:logout' %}" method="post">
+    <a href="#" id="logout-link">ログアウト</a>
+    <form id="logout-form" action="{% url 'users:logout' %}" method="post"
+    style="display:none;">
     {% csrf_token %}
-    <button type="submit">ログアウト</button>
     </form>
   {% else %}
     <a href="{% url 'users:login' %}">ログイン</a>
