@@ -12,6 +12,7 @@
     {% csrf_token %}
     </form>
   {% else %}
+    <a href="{% url 'users:register' %}">ユーザー登録</a> -
     <a href="{% url 'users:login' %}">ログイン</a>
   {% endif %}
 </p>

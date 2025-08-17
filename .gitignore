@@ -3,6 +3,8 @@ db.sqlite3
 
 # 任意のディレクトリ配下にある __pycache__ ファイルを無視
 __pycache__/
+**/__pycache__/
+*.pyc
 
 # プロジェクト直下にある ll_env フォルダとその中身すべてを無視
 ll_env/
