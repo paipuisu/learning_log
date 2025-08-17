@@ -34,6 +34,10 @@ INSTALLED_APPS = [
     # 自分のアプリケーション（協力して動作するアプリを指示）
     'learning_logs',
     'users',
+
+    # サードパーティのアプリケーション
+    'bootstrap4',
+    
     # デフォルトの django アプリケーション
     'django.contrib.admin',
     'django.contrib.auth',
