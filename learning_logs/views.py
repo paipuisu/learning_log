@@ -1,6 +1,8 @@
 """ レスポンスをレンダリング（描画） """
 
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
 
 from .models import Topic,Entry
 from .forms import TopicForm, EntryForm
@@ -11,20 +13,27 @@ def index(request):
   return render(request, 'learning_logs/index.html')
   # requestは クライアントがサーバにアクセスした際のリクエスト情報
 
+@login_required
 def topics(request):
   """すべてのトピックを表示する"""
-  topics = Topic.objects.order_by('date_added')
+  topics = Topic.objects.filter(owner=request.user).order_by('date_added')
   # date_add属性でソートされたTopicオブジェクトを検索
   context = {'topics': topics} # テンプレートに送信するコンテキストを定義
   return render(request, 'learning_logs/topics.html', context)
 
+@login_required
 def topic(request, topic_id):
   """1つのトピックとそれについてのすべての記事を表示"""
   topic = Topic.objects.get(id=topic_id)
+  # トピックが現在のユーザーが所持するものであることを確認する
+  if topic.owner != request.user:
+    raise Http404
+
   entries = topic.entry_set.order_by('-date_added')
   context = {'topic': topic, 'entries': entries}
   return render(request, 'learning_logs/topic.html', context)
 
+@login_required
 def new_topic(request):
   """新規トピックを追加する"""
   if request.method != 'POST':
@@ -34,13 +43,16 @@ def new_topic(request):
     # POSTでデータが送信されたのでこれを処理する
     form = TopicForm(data=request.POST)
     if form.is_valid():
-      form.save()
+      new_topic = form.save(commit=False)
+      new_topic.owner = request.user
+      new_topic.save()
       return redirect('learning_logs:topics')
 
   # 空または無効のフォームを表示する
   context = {'form': form}
   return render(request, 'learning_logs/new_topic.html', context)
 
+@login_required
 def new_entry(request, topic_id):
   """特定のトピックに新規記事を追加する"""
   topic = Topic.objects.get(id=topic_id)
@@ -61,10 +73,14 @@ def new_entry(request, topic_id):
   context = {'topic': topic, 'form': form}
   return render(request, 'learning_logs/new_entry.html', context)
 
+@login_required
 def edit_entry(request, entry_id):
   """既存の記事を編集する"""
   entry = Entry.objects.get(id=entry_id)
   topic = entry.topic
+
+  if topic.owner != request.user:
+    raise Http404
 
   if request.method != 'POST':
     # 初回リクエスト時は現在の記事の内容がフォームに埋め込まれている

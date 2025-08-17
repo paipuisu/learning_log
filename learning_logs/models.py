@@ -2,6 +2,7 @@
 （フィールドの種類: https://docs.djangoproject.com/ja/5.2/ref/models/fields/）"""
 
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Topic(models.Model):
@@ -9,6 +10,7 @@ class Topic(models.Model):
   text = models.CharField(max_length=200) # 短い文字列を格納（上限文字数必須）
   date_added = models.DateTimeField(auto_now_add=True) # 日時を記録
   ' auto_now_add = ユーザが新トピック作成時、現在日時を自動で設定 '
+  owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
   def __str__(self):
     """モデルの文字列表現を返す"""
