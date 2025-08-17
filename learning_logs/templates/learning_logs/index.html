@@ -1,9 +1,17 @@
 {% extends "learning_logs/base.html" %}
 <!-- 継承する親テンプレートを指定 -->
 
-{% block content %}
+{% block page_header %}
 <!-- 親テンプレートから継承していない要素を記述 -->
-<p>学習ノートを使えば、好みのトピックについて学習していることを記録して、
-    いつも最新の状態を把握できます。</p>
+ <div class="jumbotron">
+    <h1 class="display-3">学んだことを記録しよう</h1>
 
-{% endblock content %}
+    <p class="lead">自分だけの学習ノートを作成して、学んだことをいつでも
+        振り返られるようにしよう。<br>
+        何か新しいことを学んだら、その内容を要約した記事を書こう。</p>
+    
+    <a class="btn btn-lg btn-primary" href="{% url 'users:register' %}"
+        role="button">登録する &raquo;</a>
+ </div>
+
+{% endblock page_header %}
