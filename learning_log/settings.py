@@ -41,6 +41,9 @@ if RENDER_EXTERNAL_HOSTNAME:
 else:
     CSRF_TRUSTED_ORIGINS.append("http://localhost")
 
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 # Application definition
 
 INSTALLED_APPS = [
