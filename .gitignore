@@ -8,3 +8,5 @@ __pycache__/
 
 # プロジェクト直下にある ll_env フォルダとその中身すべてを無視
 ll_env/
+
+/staticfiles/
