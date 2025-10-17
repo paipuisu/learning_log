@@ -1,12 +1,26 @@
+# render.yaml - Render IaC for learning_log (with automated migrations)
 services:
   - type: web
     name: learning-log
     env: python
+    plan: free
+    # build: install packages only (faster)
     buildCommand: |
+      pip install --upgrade pip
       pip install -r requirements.txt
+
+    # releaseCommand: runs once after build and before starting the service
+    # -> ideal for migrations and collectstatic
+    releaseCommand: |
+      # ensure environment is ready, then run migrations and collectstatic
+      echo "Running Django migrations..."
       python manage.py migrate --noinput
+      echo "Collecting static files..."
       python manage.py collectstatic --noinput
+
+    # start the app with gunicorn pointing to your wsgi
     startCommand: gunicorn learning_log.wsgi
+
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: learning_log.settings
@@ -15,12 +29,14 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
-        value: False
+        value: "False"
+      # DATABASE_URL will be injected from databases block below
       - key: DATABASE_URL
         fromDatabase:
           name: learning-log-db
           property: connectionString
 
+# create a managed postgres database and expose its connection string
 databases:
   - name: learning-log-db
     plan: free
