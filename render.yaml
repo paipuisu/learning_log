@@ -12,7 +12,6 @@ services:
     # releaseCommand: runs once after build and before starting the service
     # -> ideal for migrations and collectstatic
     releaseCommand: |
-      # ensure environment is ready, then run migrations and collectstatic
       echo "Running Django migrations..."
       python manage.py migrate --noinput
       echo "Collecting static files..."
@@ -30,7 +29,6 @@ services:
         generateValue: true
       - key: DEBUG
         value: "False"
-      # DATABASE_URL will be injected from databases block below
       - key: DATABASE_URL
         fromDatabase:
           name: learning-log-db
