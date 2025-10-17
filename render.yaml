@@ -1,12 +1,8 @@
-# Render用のデプロイ設定ファイル
-
 services:
   - type: web
     name: learning-log
     env: python
-    plan: free
     buildCommand: |
-      pip install --upgrade pip
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
     startCommand: gunicorn learning_log.wsgi
@@ -14,7 +10,7 @@ services:
       - key: DJANGO_SETTINGS_MODULE
         value: learning_log.settings
       - key: PYTHON_VERSION
-        value: 3.12
+        value: 3.13
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
